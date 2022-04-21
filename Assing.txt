@@ -1,0 +1,410 @@
+package doselect_q35;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Task {
+	String name;
+	int hours;
+	
+	Task(String name, int hours){
+		this.name=name;
+		this.hours=hours;
+	}
+	public String getName() {
+		return  this.name;
+	}
+	public int getHours() {
+		return this.hours;
+	}
+	public void setNme(String name) {
+		this.name=name;
+	}
+	public void setHours(int hours) {
+		this.hours=hours;
+	}
+
+	public static void main(String[] args) throws Exception{
+		Task t = new Task("Gym",12);
+		ToDoList list=new ToDoList();
+		
+		try {
+			System.out.println(list.addTask(t).toLowerCase());
+		}
+		catch(Exception e) {
+			System.out.println(e.getMessage().toLowerCase());
+		}
+
+	}
+
+}
+
+
+class ToDoList{
+	List<Task> tasks = new ArrayList<>();
+	
+	
+	public String addTask(Task t) throws Exception{
+		int hour = t.getHours();
+		if(hour <1 || hour >24) {
+			throw new TaskException("Invalid time");
+		}
+		if(tasks.contains(t)) {
+			throw new TaskException("Already Present");
+		}
+		else {
+			tasks.add(t);
+			return "Task will be completed";
+		}
+	}
+	
+	public String completeTask(Task t) throws Exception{
+		try {
+			addTask(t);
+		}
+		catch(TaskException e) {
+			return "Task incomplete";
+		}
+		catch(Exception e) {
+			return "Other Exception";
+		}
+		return "Task completed";
+	}
+}
+
+package doselect_q35;
+
+@SuppressWarnings("serial")
+public class TaskException extends Exception {
+	public TaskException(String msg) {
+		super(msg);
+	}
+
+}
+
+package q31;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Dog {
+	String name;
+	int age;
+	int weight;
+	public Dog(String name, int age, int weight) {
+		super();
+		this.name = name;
+		this.age = age;
+		this.weight = weight;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	public int getWeight() {
+		return weight;
+	}
+	public void setWeight(int weight) {
+		this.weight = weight;
+	}
+	@Override
+	public String toString() {
+		return "Dog{name='" + name +"', age="+age+ ", weight=" + weight + "}";
+	}
+	public static void main(String[] args) {
+		List<Dog> list = new ArrayList<Dog>();
+		list.add(new Dog("German Shepherd ", 20, 35));
+		list.add(new Dog("Labrador ", 5, 40));
+		list.add(new Dog("Pitbull ", 29, 100));
+		list.add(new Dog("Poodle", 10, 45));
+		Implementation implementation=new Implementation();
+		System.out.println(implementation.filterByAgeAndWeight(list));
+		System.out.println(implementation.separateWithDelimeter(list));
+	}
+}
+class Implementation{
+    public List<Dog> filterByAgeAndWeight(List<Dog> listDog){
+    	int i=0;
+    	List<Dog> list=new ArrayList<>();
+    	for(Dog d:listDog) {
+    		if(listDog.get(i).getAge()>10 && listDog.get(i).getWeight()>25) {
+    			list.add(d);
+    		}
+    		i++;
+    	}
+    	return list;
+    }
+    public String separateWithDelimeter(List<Dog> listDog){
+    	StringBuffer sb=new StringBuffer();  
+		int n=listDog.size();
+		sb.append(listDog.get(0));
+		for(int i=1;i<n;i++) {
+			sb.append("$$");
+			sb.append(listDog.get(i));
+		}
+		return sb.toString();
+    }
+}
+
+package q32;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class Product {
+	private Integer id;
+	private String name;
+	private Double price;
+	public Product(Integer id, String name, Double price) {
+		this.id = id;
+		this.name = name;
+		this.price = price;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Double getPrice() {
+		return price;
+	}
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+	@Override
+	public String toString() {
+		return "Product{id="+id+" name='" + name +"', price="+price+"}";
+	}
+	public static void main(String[] args) {
+		Product pr1 = new Product(1, "Ceviche", 15.0);
+		Product pr2 = new Product(2, "Chilaquiles", 25.50);
+		Product pr3 = new Product(3, "Bandeja Paisa", 35.50);
+		Product pr4 = new Product(4, "Ceviche", 15.0);
+		List<Product> pr = Arrays.asList(pr1, pr2, pr3, pr4);
+		Implementation implementation=new Implementation();
+		System.out.println(implementation.getProductName(pr));
+		System.out.println(implementation.getSum(pr));
+	}
+}
+class Implementation{
+	public Map<String, List<Product>> getProductName(List<Product> products){
+		Map<String, List<Product>> tempMap = new HashMap<String, List<Product>>();
+		for(Product p:products) {
+			List<Product> ProductList=new ArrayList<>();
+			if(p.getPrice()>20.0) {
+				if(!tempMap.containsKey(p.getName())) {
+					ProductList.add(p);
+					tempMap.put(p.getName(),ProductList);
+				}
+				else {
+					List<Product> temp=new ArrayList<>();
+					ProductList.add(p);
+					temp=tempMap.get(p.getName());
+					temp.addAll(ProductList);
+					tempMap.put(p.getName(),temp) ;
+				}
+			}
+		}
+		return tempMap;
+	}
+	public Map<String, Double> getSum(List<Product> products){
+		Map<String, Double> tempMap = new HashMap<String, Double>();
+		for(Product p:products) {
+			if(!tempMap.containsKey(p.getName())) {
+				tempMap.put(p.getName(),p.getPrice());
+			}
+			else {
+				double temp=tempMap.get(p.getName());
+				temp+=p.getPrice();
+				tempMap.put(p.getName(),temp);
+			}
+		}
+		return tempMap;
+	}
+}
+package q33;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+public class Person {
+	private Integer id;
+	private String name;
+	private LocalDate birthDate;
+	public Person(Integer id, String name, LocalDate birthDate) {
+		this.id = id;
+		this.name = name;
+		this.birthDate = birthDate;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public LocalDate getBirthDate() {
+		return birthDate;
+	}
+	public void setBirthDate(LocalDate birthDate) {
+		this.birthDate = birthDate;
+	}
+	@Override
+	public String toString() {
+		return "Product{id="+id+" name='" + name +"', birthDate="+birthDate+"}";
+	}
+	public static void main(String[] args) {
+		Person p1 = new Person(1, "Mito", LocalDate.of(1991, 1, 21));
+		Person p2 = new Person(2, "Code", LocalDate.of(1990, 2, 21));
+		Person p3 = new Person(3, "Jaime", LocalDate.of(1980, 6, 23));
+		Person p4 = new Person(4, "Duke", LocalDate.of(2019, 5, 15));
+		Person p5 = new Person(5, "James", LocalDate.of(2010, 1, 4));
+		List<Person> persons = Arrays.asList(p1, p2, p3, p4, p5);
+		Implementation imp=new Implementation();
+		System.out.println(imp.filterListByBirth(persons));
+		System.out.println(imp.limitSkipAndReturn(persons, 1, 2));
+	}
+}
+class Implementation{
+	public List<Person> filterListByBirth(List<Person> persons){
+		List<Person> persons1=new ArrayList<>(persons);
+		Collections.sort(persons1, Comparator.comparing(Person::getBirthDate));
+		return persons1;
+	}
+	public List<Person> limitSkipAndReturn(List<Person> persons,int pageNumber,int pageSize){
+		List<Person> list=new ArrayList<>();
+		int temp1=pageNumber*pageSize;
+		int temp2=0;
+		for(int i=temp1;i<persons.size();i++) {
+			if(temp2==temp1)
+				return list;
+			list.add(persons.get(i));
+			temp2++;
+		}
+		return list;
+	}
+}
+package doselect34;
+
+public class Bomb {
+
+	int time;
+	String color;
+
+	Bomb() {
+
+	}
+
+	Bomb(int time, String color) {
+		this.time = time;
+		this.color = color;
+	}
+
+	public void setTime(int time) {
+		this.time = time;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public int getTime() {
+		return this.time;
+	}
+
+	public String getColor() {
+		return this.color;
+	}
+
+
+
+class Suicide {
+
+		Bomb bomb=null;
+		public Suicide(Bomb bb) {
+			bomb=bb;
+		}
+		public String diffuseIt(int time , String color) throws Exception{
+			int bombtime = bomb.getTime();
+			String bombcolor = bomb.getColor();
+			
+			if(time  > bombtime)
+				throw new SuicideException("Time exceeded");
+			if(color != bombcolor)
+				throw new SuicideException("Wrong color");
+			else
+				return "Hope is there";
+			
+		
+			
+		}
+		
+		public String checkSafety(int time , String color) throws Exception{
+			
+			try {
+				diffuseIt(time , color);
+					
+			}
+			catch(SuicideException e) {
+				return "Bomb exploded";
+			}
+			catch(Exception e) {
+				return "Other Exception";
+			}
+			return "take a bow";
+		}
+	}
+
+
+	@SuppressWarnings("serial")
+public class SuicideException extends Exception {
+
+	public SuicideException(String msg) {
+		super(msg);
+		}
+}
+
+	public static void main(String[] args) throws Exception {
+		// TODO Auto-generated method stub
+
+		Bomb b = new Bomb(10, "red");
+		Suicide sc = b.new Suicide(b);
+		
+		 try {
+			 System.out.println(sc.diffuseIt(5,"red").toLowerCase());
+			
+		 }
+		 catch(SuicideException e){
+			 System.out.println(e.getMessage().toLowerCase());
+		 }
+		 String t = sc.checkSafety(8,"blue");
+			 System.out.println(t.toLowerCase());
+	}
+
+}
